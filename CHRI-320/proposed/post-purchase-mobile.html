@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ID check — CheqUp (proposed CHRI-320)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* Brand tokens — see CheqUp Brand Guidelines V1 */
+  :root {
+    --potent-purple: #683CF5;
+    --mindful-midnight: #210847;
+    --vitality-violet: #A15CFF;
+    --fearless-fuchsia: #A48AF9;
+    --tenacious-turquoise: #83EDFF;
+    --wellness-white: #F2F9FC;
+    /* Demo substitute for Kind Sans (paid foundry font). Swap for Kind Sans in production. */
+    --font-sans: 'Inter', -apple-system, system-ui, sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--font-sans);
+    color: var(--mindful-midnight);
+    background: #ffffff;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 20px 20px 40px;
+  }
+
+  /* Logo */
+  .logo {
+    font-weight: 700;
+    font-size: 28px;
+    color: var(--mindful-midnight);
+    letter-spacing: -0.02em;
+    margin-bottom: 24px;
+    display: inline-block;
+  }
+  .logo span { color: var(--potent-purple); }
+
+  /* Top card with light cyan tint */
+  .intro-card {
+    background: #EAF6FA;
+    border-radius: 16px;
+    padding: 28px 22px;
+    margin-bottom: 28px;
+  }
+
+  h1 {
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--mindful-midnight);
+    margin-bottom: 16px;
+    line-height: 1.15;
+  }
+
+  /* === DEMO ONLY: visual highlights for proposed changes === */
+  .changed {
+    background: #FFF3B0;
+    box-shadow: 0 0 0 3px #FFF3B0;
+    border-radius: 3px;
+  }
+  .added {
+    background: #D4F4DD;
+    box-shadow: 0 0 0 3px #D4F4DD;
+    border-radius: 3px;
+  }
+  .demo-legend {
+    background: var(--mindful-midnight);
+    color: white;
+    font-size: 12px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .demo-legend .swatch {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    vertical-align: middle;
+    margin-right: 4px;
+  }
+  /* === end demo-only === */
+
+  .intro-card p {
+    font-size: 15px;
+    margin-bottom: 12px;
+    color: var(--mindful-midnight);
+  }
+
+  .intro-card ul {
+    list-style: none;
+    margin: 4px 0 24px;
+  }
+
+  .intro-card ul li {
+    font-size: 15px;
+    padding-left: 18px;
+    position: relative;
+    margin-bottom: 6px;
+  }
+
+  .intro-card ul li::before {
+    content: "";
+    width: 5px;
+    height: 5px;
+    background: var(--fearless-fuchsia);
+    border-radius: 50%;
+    position: absolute;
+    left: 4px;
+    top: 9px;
+  }
+
+  /* Order number badge */
+  .order-badge {
+    background: #DCD0FB;
+    border-radius: 12px;
+    padding: 10px 18px;
+    text-align: center;
+    display: inline-block;
+    margin-bottom: 20px;
+  }
+  .order-badge .label {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--mindful-midnight);
+    display: block;
+  }
+  .order-badge .number {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--mindful-midnight);
+    letter-spacing: 0.02em;
+  }
+
+  /* Progress steps */
+  .progress {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-top: 8px;
+    position: relative;
+  }
+  .progress-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    position: relative;
+    z-index: 2;
+  }
+  .progress-step .circle {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1.5px solid var(--vitality-violet);
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 8px;
+  }
+  .progress-step.done .circle {
+    background: var(--vitality-violet);
+    border-color: var(--vitality-violet);
+  }
+  .progress-step.done .circle::after {
+    content: "✓";
+    color: white;
+    font-size: 14px;
+    font-weight: 700;
+  }
+  .progress-step .label {
+    font-size: 11px;
+    color: var(--mindful-midnight);
+  }
+  .progress-step.current .label {
+    font-weight: 600;
+    text-decoration: underline;
+  }
+  .progress-step.upcoming .label {
+    color: #B8AFCF;
+  }
+  .progress-step.upcoming .circle {
+    border-color: #DCD0FB;
+  }
+  /* Connecting line */
+  .progress::before {
+    content: "";
+    position: absolute;
+    top: 14px;
+    left: 14%;
+    right: 14%;
+    height: 1.5px;
+    background: #DCD0FB;
+    z-index: 1;
+  }
+
+  /* Verify section */
+  .verify-section {
+    padding: 8px 6px;
+  }
+
+  h2 {
+    font-size: 26px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    margin-bottom: 14px;
+  }
+
+  .verify-section > p {
+    font-size: 15px;
+    margin-bottom: 22px;
+  }
+
+  /* Primary CTA button */
+  .btn-primary {
+    display: inline-block;
+    background: var(--tenacious-turquoise);
+    color: var(--mindful-midnight);
+    font-family: var(--font-sans);
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    padding: 14px 28px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  /* Divider */
+  hr {
+    border: none;
+    border-top: 1px solid #E5E5EC;
+    margin: 28px 0;
+  }
+
+  /* Why / What if sections */
+  .info-block {
+    margin-bottom: 24px;
+  }
+  .info-block h3 {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--potent-purple);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .info-block p {
+    font-size: 14px;
+    margin-bottom: 8px;
+    color: var(--mindful-midnight);
+  }
+
+  /* QR code placeholder */
+  .qr-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-top: 12px;
+  }
+  .qr-code {
+    width: 72px;
+    height: 72px;
+    border: 1px solid #DCD0FB;
+    border-radius: 6px;
+    flex-shrink: 0;
+    background:
+      repeating-linear-gradient(0deg, var(--mindful-midnight) 0 4px, transparent 4px 8px),
+      repeating-linear-gradient(90deg, var(--mindful-midnight) 0 4px, transparent 4px 8px);
+  }
+
+  /* Privacy note */
+  .privacy-note {
+    background: #F7F7FB;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin: 24px 0;
+    font-size: 13px;
+    color: #5A4F70;
+  }
+  .privacy-note a { color: var(--potent-purple); }
+
+  /* Continue button row */
+  .continue-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid #E5E5EC;
+  }
+  .btn-continue {
+    background: #EAF6FA;
+    color: #8A8FA0;
+    font-family: var(--font-sans);
+    font-size: 17px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    padding: 14px 24px;
+    border-radius: 10px;
+    border: none;
+    cursor: not-allowed;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* Footer */
+  footer {
+    margin-top: 40px;
+    font-size: 12px;
+    color: #8A8FA0;
+  }
+  footer .row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 8px;
+  }
+  footer a {
+    color: #8A8FA0;
+    text-decoration: underline;
+    margin-left: 16px;
+  }
+</style>
+</head>
+<body>
+  <div class="page">
+
+    <!-- Logo -->
+    <div class="logo">cheq<span>up</span></div>
+
+    <!-- DEMO ONLY: legend showing what's changed (remove before launch) -->
+    <div class="demo-legend">
+      <span><span class="swatch" style="background:#FFF3B0;"></span>Changed copy</span>
+      <span><span class="swatch" style="background:#D4F4DD;"></span>Added element</span>
+    </div>
+
+    <!-- Intro card -->
+    <section class="intro-card">
+      <h1><span class="changed">Payment received — let's get your order moving</span></h1>
+      <p><span class="changed">We've received your payment for order CHEQ-2481. Complete the steps below and your prescription goes to a clinician for review.</span></p>
+      <p>We just need:</p>
+      <ul>
+        <li>Verification of a valid photographic ID.</li>
+        <li>A photo of you standing.</li>
+        <li>Evidence of a previous prescription.</li>
+      </ul>
+
+      <!-- Progress steps -->
+      <div class="progress">
+        <div class="progress-step done">
+          <div class="circle"></div>
+          <div class="label">Order</div>
+        </div>
+        <div class="progress-step current">
+          <div class="circle"></div>
+          <div class="label">ID check</div>
+        </div>
+        <div class="progress-step upcoming">
+          <div class="circle"></div>
+          <div class="label">BMI check</div>
+        </div>
+        <div class="progress-step upcoming">
+          <div class="circle"></div>
+          <div class="label">Dose check</div>
+        </div>
+        <div class="progress-step upcoming">
+          <div class="circle"></div>
+          <div class="label">Your GP</div>
+        </div>
+      </div>
+
+      <!-- Order number -->
+      <div style="margin-top: 22px; text-align: center;">
+        <div class="order-badge">
+          <span class="label"><span class="changed">Paid order</span></span>
+          <span class="number">CHEQ-2481</span>
+        </div>
+      </div>
+
+      <!-- Dispatch timing reassurance -->
+      <p class="added" style="margin-top: 18px; font-size: 14px; text-align: center; padding: 10px 12px;">
+        Approved before 14:00 (Mon–Fri)? Your medication ships the same day.
+      </p>
+    </section>
+
+    <!-- Verify section -->
+    <section class="verify-section">
+      <h2>Verify your ID</h2>
+      <p>We've partnered with Persona to provide a fully secure ID process. They'll check your ID matches the photo you share.</p>
+
+      <button class="btn-primary">Verify ID</button>
+
+      <hr>
+
+      <div class="info-block">
+        <h3>Why do we need this?</h3>
+        <p>To comply with UK medical regulations, we need to confirm the identity of all individuals receiving medication from us.</p>
+        <p>We do this using a specialist third party to ensure the highest standards of document security.</p>
+      </div>
+
+      <div class="info-block">
+        <h3>What if you have no camera?</h3>
+        <div class="qr-row">
+          <div class="qr-code"></div>
+          <p style="margin-top: 0;">If the device you're using has no camera or you would prefer to complete these steps on another device, you can now log in to your account on another device by clicking or scanning the QR code.</p>
+        </div>
+      </div>
+
+      <div class="privacy-note">
+        Your data is safe with CheqUp. We adhere to the highest online security standards and are recognised by the leading UK medical security standards. For more information, see our <a href="#">privacy policy</a>.
+      </div>
+
+      <div class="continue-row">
+        <button class="btn-continue">Continue →</button>
+      </div>
+    </section>
+
+    <footer>
+      CheqUp Health Limited
+      <div class="row">
+        <span></span>
+        <span>
+          <a href="#">Terms and Conditions</a>
+          <a href="#">Privacy Policy</a>
+        </span>
+      </div>
+    </footer>
+
+  </div>
+</body>
+</html>
