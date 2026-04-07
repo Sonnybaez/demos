@@ -1,12 +1,12 @@
 # CHRI-320: Post-Purchase Confirmation Clarity
 
-Visual demo and implementation reference for the first child ticket of the **Leaky Pipe — Stage 3 / Verification** epic.
+Visual demo and implementation reference for the first child ticket of the **Leaky Pipe  - Stage 3 / Verification** epic.
 
 ## What this is
 
 A side-by-side demo showing the current post-purchase verification page versus the proposed CHRI-320 changes, plus an annotated Vue file the front-end dev can use as a reference when implementing.
 
-The point of this folder is to make the changes obvious to anyone — Karen, Dom, the front-end dev, SLT — without needing to imagine what the wording change "looks like" in context.
+The point of this folder is to make the changes obvious to anyone  - Karen, Dom, the front-end dev, SLT  - without needing to imagine what the wording change "looks like" in context.
 
 ## Why we're doing this
 
@@ -20,39 +20,46 @@ The current post-purchase touchpoints don't tell the customer the most important
 CHRI-320/
 ├── README.md                              ← you are here
 ├── current/
-│   └── post-purchase-mobile.html          ← replica of the live page (mobile)
+│   └── post-purchase.html                 ← replica of the live page
 ├── proposed/
-│   └── post-purchase-mobile.html          ← with CHRI-320 changes applied
+│   └── post-purchase.html                 ← with CHRI-320 changes applied
 └── vue-diff/
     └── PurchaseCompleted.annotated.vue    ← annotated changes for the dev
 ```
 
+Both HTML files are **fully responsive**  - they adapt from mobile (390px) up to desktop (1280px+) using a single layout. Mobile is the priority since most CheqUp traffic is mobile, but the desktop view is properly polished too.
+
 ## How to view
 
-Open the HTML files directly in a browser, or push to GitHub Pages for a shareable preview link.
+Open the HTML files directly in a browser, or via the GitHub Pages preview:
+
+- Current: https://sonnybaez.github.io/demos/CHRI-320/current/post-purchase.html
+- Proposed: https://sonnybaez.github.io/demos/CHRI-320/proposed/post-purchase.html
+
+Resize the window to see the layout adapt between mobile and desktop.
 
 The proposed file has a small legend banner at the top of the page that highlights what's changed:
 - **Yellow** = changed copy
 - **Green** = added element
 
-Both highlights and the legend banner are demo-only — they would be removed before launch.
+Both highlights and the legend banner are demo-only  - they would be removed before launch.
 
 ## What's changing
 
 | # | Element | Current | Proposed |
 |---|---------|---------|----------|
-| 1 | Page header | Almost there | Payment received — let's get your order moving |
-| 2 | Subhead | We've received your request, but we need to verify your identity before we proceed with your prescription. | We've received your payment for order CHEQ-XXXX. Complete the steps below and your prescription goes to a clinician for review. |
+| 1 | Page header | Almost there | Payment received. Let's get your order moving |
+| 2 | Subhead | We've received your request, but we need to verify your identity before we proceed with your prescription. | We've received your payment for [medication name]. Complete the steps below and your prescription goes to a clinician for review. |
 | 3 | List lead-in | We ask you to provide: | We just need: |
 | 4 | Order badge label | Order number | Paid order |
-| 5 | Dispatch timing note | *(not present)* | Approved before 14:00 (Mon–Fri)? Your medication ships the same day. |
+| 5 | Dispatch timing note | *(not present)* | If your order is approved before 14:00 (Mon-Fri) it will ship the same day. |
 
 ## Notes for the front-end dev
 
-- The demo HTML uses **Inter** as a substitute for **Kind Sans** because Kind Sans is a paid foundry font and can't be loaded in a static demo. Visual difference is minimal at body sizes — swap for Kind Sans in the real implementation.
+- The demo HTML uses **Inter** as a substitute for **Kind Sans** because Kind Sans is a paid foundry font and can't be loaded in a static demo. Visual difference is minimal at body sizes  - swap for Kind Sans in the real implementation.
 - Brand colours match the CheqUp Brand Guidelines V1 (Potent Purple `#683CF5`, Mindful Midnight `#210847`, Tenacious Turquoise `#83EDFF`, etc).
 - The QR code in the demo is a placeholder pattern, not a real code. The real component already loads the right asset.
-- The demo is mobile-only for now (390px viewport). Desktop demo to follow if needed — most CheqUp traffic is mobile so that's where the polish matters most.
+- Responsive breakpoint is at 768px  - below that, mobile stacked layout; above that, two-column intro card and two-column verify section.
 
 ## What's out of scope for this ticket
 

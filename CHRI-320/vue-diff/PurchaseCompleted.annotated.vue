@@ -7,7 +7,7 @@
   for easy diffing. Additions are wrapped with <!-- ADDED -->.
   
   The <script setup>, <style scoped>, and untouched parts of the template
-  are not reproduced here — refer to the original PurchaseCompleted.vue.
+  are not reproduced here  - refer to the original PurchaseCompleted.vue.
 -->
 
 <template>
@@ -25,7 +25,7 @@
         >
 
           <!-- ============================================================ -->
-          <!-- INTRO SLOT — copy changes for payment-led messaging          -->
+          <!-- INTRO SLOT  - copy changes for payment-led messaging          -->
           <!-- ============================================================ -->
           <template #intro>
             <div class="intro rc">
@@ -35,16 +35,22 @@
                    Why:  "Almost there" doesn't confirm payment or create urgency.
                          The new header makes it explicit that money has changed
                          hands and verification is the only outstanding step. -->
-              <h1>Payment received — let's get your order moving</h1>
+              <h1>Payment received. Let's get your order moving</h1>
               <!-- /CHANGED -->
 
               <!-- CHANGED: subhead replaced
                    Was:  <p>We've received your request, but we need to verify
                           your identity before we proceed with your prescription.</p>
-                   Why:  "request" is wrong — they've placed and paid for an order.
-                         New copy reinforces payment + names the order number +
-                         tells the user exactly what unblocks dispatch. -->
-              <p>We've received your payment for order <strong>CHEQ-{{ user.id }}</strong>. Complete the steps below and your prescription goes to a clinician for review.</p>
+                   Why:  "request" is wrong  - they've placed and paid for an order.
+                         New copy reinforces payment + names the medication +
+                         tells the user exactly what unblocks dispatch.
+                   Note: {{ productName }} should be the brand name of the
+                         medication purchased (e.g. "Mounjaro" or "Wegovy").
+                         The dev will need to thread this through from the order
+                         data  - it's not currently exposed as a prop on this
+                         component, so a small backend/route change is needed
+                         to surface it. -->
+              <p>We've received your payment for {{ productName }}. Complete the steps below and your prescription goes to a clinician for review.</p>
               <!-- /CHANGED -->
 
               <!-- CHANGED: lead-in line shortened
@@ -92,13 +98,13 @@
                      dashboard, not on this page. Surfacing it here gives the
                      user an immediate reason to complete now rather than later.
                Note: this should only render Mon-Fri before 14:00 to be most
-                     effective — see DispatchTimingNote.vue (new component
+                     effective  - see DispatchTimingNote.vue (new component
                      scoped in CHRI-320 implementation ticket). -->
           <DispatchTimingNote v-if="showDispatchTiming" />
           <!-- /ADDED -->
 
           <!-- ============================================================ -->
-          <!-- REMAINING SLOTS — UNCHANGED                                  -->
+          <!-- REMAINING SLOTS  - UNCHANGED                                  -->
           <!-- noCameraFAQ, privacyNote, buttonRow                          -->
           <!-- ============================================================ -->
 
@@ -123,7 +129,7 @@
           </template>
 
           <template #buttonRow>
-            <!-- unchanged — see original PurchaseCompleted.vue lines 377-418 -->
+            <!-- unchanged  - see original PurchaseCompleted.vue lines 377-418 -->
           </template>
 
         </component>
@@ -138,16 +144,19 @@
   ============================================================
   
   1. h1 copy:           "Almost there"
-                        → "Payment received — let's get your order moving"
+                        becomes "Payment received. Let's get your order moving"
   
   2. Subhead p copy:    "We've received your request, but we need to verify
                          your identity before we proceed with your prescription."
-                        → "We've received your payment for order CHEQ-{{user.id}}.
+                        becomes "We've received your payment for {{ productName }}.
                            Complete the steps below and your prescription goes
                            to a clinician for review."
+                        Note: {{ productName }} = "Mounjaro" or "Wegovy" etc.
+                        This is not currently exposed as a prop on this component
+                        so a small backend/route change is needed to surface it.
   
   3. List lead-in:      "We ask you to provide:"
-                        → "We just need:"
+                        becomes "We just need:"
   
   4. OrderNumber:       Add `label="Paid order"` prop
                         Requires OrderNumber.vue to accept a `label` prop
@@ -160,7 +169,7 @@
   COMPONENTS THAT NEED UPDATING
   ============================================================
   
-  - PurchaseCompleted.vue   (this file — 5 changes above)
+  - PurchaseCompleted.vue   (this file  - 5 changes above)
   - OrderNumber.vue         (add `label` prop with default)
   - DispatchTimingNote.vue  (new component, scoped in CHRI-320)
   
